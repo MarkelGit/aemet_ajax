@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <link rel="stylesheet" href="css/bootstrap.min.css">
+  
+  <script src="js/jquery-3.3.1.js"></script>
+  <script src="js/popper.min.js"></script>
+  <script src="js/bootstrap.min.js"></script>
+  
+  <title>Aemet</title>
+
+<style>
+  .tMax, .tMin {
+      min-width: 40px;
+      text-align: center;
+    }
+  
+  table td, table th {
+    padding: 5px;
+  }
+
+  table th {
+    background-color: #bbb;
+  }    
+  
+  table tr:nth-child(even) {
+    background-color: #ddd;
+  }
+</style>
+
+</head>
+
+<body>
+
+  <div class="container"></div>
+
+  <script>
+
+    var apiKey = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJtYXJrZWxyb2RyaWd1ZXoxOUBnbWFpbC5jb20iLCJqdGkiOiIyZTQxZDRkMS01MDFmLTQ5OTItOGViMy00ZjEyNGI5MWMyZTYiLCJpc3MiOiJBRU1FVCIsImlhdCI6MTU1NjUyMDE4MSwidXNlcklkIjoiMmU0MWQ0ZDEtNTAxZi00OTkyLThlYjMtNGYxMjRiOTFjMmU2Iiwicm9sZSI6IiJ9.XhiyQhq2omWgyURxew4zyO0dGpPFOspcY4bs64NCfyE";
+
+    $(document).ready(function () {
+
+      $.getJSON('https://opendata.aemet.es/opendata/api/prediccion/especifica/municipio/diaria/48003/?api_key='+apiKey).done(function (response) {
+        console.log(response);
+
+        $.getJSON(response.datos).done(function (response2) {
+          console.log(response2);
+
+          var htmlcode = '<h1>Predicciones Amorebieta</h1>';
+              htmlcode += '<table border = "1">';
+              htmlcode += '<thead>';
+              htmlcode += '<tr>';
+              htmlcode += '<th>Fecha</th>';
+              htmlcode += '<th>T.Max</th>';
+              htmlcode += '<th>T.Min</th>';
+              htmlcode += '</tr>';
+              htmlcode += '</thead>';
+
+          for (i in response2[0].prediccion.dia) {
+            console.log(response2[0].prediccion.dia[i].temperatura);
+
+            var temperatura = response2[0].prediccion.dia[i].temperatura;
+  
+            htmlcode +=  '<tbody>';
+            htmlcode += '<tr>';
+            htmlcode += '<td class="fecha">'+ response2[0].prediccion.dia[i].fecha +'</td>';
+            htmlcode += '<td class="tMax">' + temperatura.maxima +'</td>';
+            htmlcode += '<td class="tMin">' + temperatura.minima +'</td>';
+            htmlcode += '</tr>';
+            htmlcode +=  '</tbody>';
+          }
+            htmlcode += '</table>';
+            $('.container').html(htmlcode);
+        })
+      });
+
+    });
+  </script>
+
+</body>
+
+</html>
